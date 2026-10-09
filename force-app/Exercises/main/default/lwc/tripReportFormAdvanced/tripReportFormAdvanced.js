@@ -136,6 +136,7 @@ export default class TripReportFormAdvanced extends LightningElement {
 					//TODO #7: after record creation, store the new ID of the trip report in our recordId property
 					this.recordId = tripReport.id;
 					Utils.showToast(this, "Success", "Trip Report Created", "success", "dismissible");
+					this.returnToBrowseMode();
 				})
 				.catch((error) => {
 					let errors = reduceErrors(error);
@@ -151,6 +152,7 @@ export default class TripReportFormAdvanced extends LightningElement {
 			updateRecord(recordInput)
 				.then(() => {
 					Utils.showToast(this, "Success", "Trip Report Updated", "success", "dismissible");
+					this.returnToBrowseMode();
 				})
 				.catch((error) => {
 					let errors = reduceErrors(error);
@@ -176,6 +178,15 @@ export default class TripReportFormAdvanced extends LightningElement {
 			}
 		});
 
+		this.dispatchEvent(evt);
+	}
+
+	returnToBrowseMode() {
+		const evt = new CustomEvent("tripreportmodechange", {
+			detail: {
+				mode: "browse"
+			}
+		});
 		this.dispatchEvent(evt);
 	}
 }
