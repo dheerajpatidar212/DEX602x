@@ -5,6 +5,7 @@
     "workbench.editor.enablePreview": false,
     "editor.minimap.enabled": false,
     "editor.mouseWheelZoom": true,
-    "files.autoSave": "off",
-    "salesforce.einsteinForDevelopers.enableAutocompletions": false
+    "files.autoSave": "afterDelay",
+    "salesforce.einsteinForDevelopers.enableAutocompletions": false,
+    "xml.preferences.showSchemaDocumentationType": "none"
 }

@@ -10,3 +10,4 @@ sf apex run --file EXFiles/data/CreateUsers.txt
 echo "*** Creating data"
 # sfdx ETCopyData:import -c EXFiles/data --loglevel warn
 sf apex run --file EXFiles/data/DeleteAndLoadData.txt
+#moved to solution 5/06
