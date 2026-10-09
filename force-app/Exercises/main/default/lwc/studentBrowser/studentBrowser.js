@@ -1,55 +1,58 @@
-import { LightningElement, wire } from 'lwc';
-import getStudents from '@salesforce/apex/StudentBrowser.getStudents';
-import { publish, MessageContext } from 'lightning/messageService';
-import SELECTED_STUDENT_CHANNEL from '@salesforce/messageChannel/SelectedStudentChannel__c';
-import { NavigationMixin } from 'lightning/navigation';
+import { LightningElement, wire } from "lwc";
+import getStudents from "@salesforce/apex/StudentBrowser.getStudents";
+import { publish, MessageContext } from "lightning/messageService";
+import SELECTED_STUDENT_CHANNEL from "@salesforce/messageChannel/SelectedStudentChannel__c";
+import { NavigationMixin } from "lightning/navigation";
 
 export default class StudentBrowser extends NavigationMixin(LightningElement) {
-	@wire(getStudents, { instructorId: '$selectedInstructorId', courseDeliveryId: '$selectedDeliveryId' })
-	students;
+	students = [];
+	@wire(getStudents, { instructorId: "$selectedInstructorId", courseDeliveryId: "$selectedDeliveryId" })
+	wired_getStudents(result) {
+		this.students = result;
+		this.dispatchEvent(new CustomEvent("doneloading", { bubbles: true, composed: true }));
+	}
 
 	cols = [
 		{
-			fieldName:"Name", 
+			fieldName: "Name",
 			label: "Name"
 		},
 		{
-			fieldName:"Title", 
+			fieldName: "Title",
 			label: "Title",
 			hiddenOnMobile: true
 		},
 		{
-			fieldName:"Phone", 
+			fieldName: "Phone",
 			label: "Phone",
 			type: "phone"
 		},
 		{
-			fieldName:"Email", 
+			fieldName: "Email",
 			label: "E-Mail",
 			type: "email"
 		}
 	];
-	
 
 	@wire(MessageContext) messageContext;
 
-	selectedDeliveryId = '';
-	selectedInstructorId = '';
+	selectedDeliveryId = "";
+	selectedInstructorId = "";
 
-	handleFilterChange(event){
+	handleFilterChange(event) {
 		this.selectedDeliveryId = event.detail.deliveryId;
 		this.selectedInstructorId = event.detail.instructorId;
+		this.dispatchEvent(new CustomEvent("loading", { bubbles: true, composed: true }));
 	}
 
-	handleStudentSelected(event){
+	handleStudentSelected(event) {
 		const studentId = event.detail.studentId;
 		this.updateSelectedStudent(studentId);
 	}
 
-	updateSelectedStudent(studentId){
-
-		let gallery = this.template.querySelector('c-student-tiles');
-		let grid = this.template.querySelector('c-responsive-datatable');
+	updateSelectedStudent(studentId) {
+		let gallery = this.template.querySelector("c-student-tiles");
+		let grid = this.template.querySelector("c-responsive-datatable");
 		if (gallery) {
 			gallery.setSelectedStudent(studentId);
 		}
@@ -59,15 +62,15 @@ export default class StudentBrowser extends NavigationMixin(LightningElement) {
 
 		publish(this.messageContext, SELECTED_STUDENT_CHANNEL, { studentId: studentId });
 	}
-	
-	handleRowDblClick (event) {
+
+	handleRowDblClick(event) {
 		const studentId = event.detail.pk;
 		this[NavigationMixin.Navigate]({
-			type: 'standard__recordPage',
+			type: "standard__recordPage",
 			attributes: {
 				recordId: studentId,
-				objectApiName: 'Contact',
-				actionName: 'edit'
+				objectApiName: "Contact",
+				actionName: "edit"
 			}
 		});
 	}
@@ -76,7 +79,4 @@ export default class StudentBrowser extends NavigationMixin(LightningElement) {
 		let studentId = event.detail.pk;
 		this.updateSelectedStudent(studentId);
 	}
-	
-	
-	
 }
