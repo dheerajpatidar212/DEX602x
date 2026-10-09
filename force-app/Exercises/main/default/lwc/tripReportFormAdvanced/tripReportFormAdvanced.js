@@ -189,4 +189,8 @@ export default class TripReportFormAdvanced extends LightningElement {
 		});
 		this.dispatchEvent(evt);
 	}
+
+	handleCancel() {
+		this.returnToBrowseMode();
+	}
 }
